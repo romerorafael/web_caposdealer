@@ -1,5 +1,6 @@
 ﻿using CD.Web.Context;
 using CD.Web.Models;
+using CD.Web.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace CD.Web.Repositories
@@ -20,6 +21,14 @@ namespace CD.Web.Repositories
         public async Task<Venda> GetVendaById(int? id)
         {
             return await _dbContext.Vendas.FindAsync(id);
+        }
+        public async Task<List<Venda>> GetVendaByClientId(int? id)
+        {
+            return _dbContext.Vendas.Where(x => x.IdCliente == id).ToList();
+        }
+        public async Task<List<Venda>> GetVendaByProductId(int? id)
+        {
+            return _dbContext.Vendas.Where(x => x.IdProduto == id).ToList();
         }
         public async Task<bool> Add(Venda Venda)
         {

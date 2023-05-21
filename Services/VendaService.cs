@@ -72,6 +72,16 @@ namespace CD.Web.Services
             }
         }
 
+        public async Task<List<Venda>> GetVendaByClientId(int? id)
+        {
+            return await _vendaRepository.GetVendaByClientId(id);
+        }
+
+        public async Task<List<Venda>> GetVendaByProductId(int? id)
+        {
+            return await _vendaRepository.GetVendaByProductId(id);
+        }
+
         public async Task<IEnumerable<Venda>> GetAll()
         {
             try

@@ -7,9 +7,12 @@ namespace CD.Web.Controllers
     public class ProdutoController : Controller
     {
         private readonly ProdutoService _produtoService;
+        private readonly VendaService _vendaService;
 
-        public ProdutoController(ProdutoService produtoService)
+
+        public ProdutoController(VendaService vendaService, ProdutoService produtoService)
         {
+            _vendaService = vendaService;
             _produtoService = produtoService;
         }
 
@@ -89,10 +92,18 @@ namespace CD.Web.Controllers
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Produto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [Route("[controller]/delete/{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
+                var vendas = await _vendaService.GetVendaByProductId(id);
+                if (vendas != null)
+                {
+                    foreach (var venda in vendas)
+                    {
+                        _vendaService.Delete(venda.IdVenda);
+                    }
+                }
                 bool data = _produtoService.Delete(id);
 
                 return !data ? NotFound() : Ok(data);
