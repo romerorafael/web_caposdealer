@@ -1,0 +1,75 @@
+<section id="actionButtons">
+  <div class="buttonContainer">
+    <button (click)="openRegister(false, null)" type="button" class="btn btn-success">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+      Novo Cliente
+    </button>
+  </div>
+  <input (keyup)="search($event)" class="form-control mt-3 " type="search" placeholder="Busque por cliente" />
+
+  <div class="tableContainer" *ngIf="clientes && !noFoundTerm">
+    <table class='table table-striped mt-3'>
+      <thead>
+        <tr>
+          <th class="col-1" scope="row">Código</th>
+          <th class="col-4">Nome</th>
+          <th class="col-4">Cidade</th>
+          <th class="col-3">Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let cliente of clientes">
+          <td class="text-center" scope="row">{{ cliente.idCliente }}</td>
+          <td>{{ cliente.nmCliente }}</td>
+          <td>{{ cliente.nmCidade }}</td>
+          <td>
+            <button (click)="openRegister(true, cliente)" type="button" class="btn btn-primary mx-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              Editar
+            </button>
+            <button (click)="deleteModal(cliente)" type="button" class="btn btn-danger mx-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-octagon"><polygon points="7.86 2 16.14 2 22 7.86 22 16.14 16.14 22 7.86 22 2 16.14 2 7.86 7.86 2"></polygon><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+              Excluir
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div *ngIf="!clientes && noFoundTerm">
+    <h3>Nenhum termo correspondente a sua pesquisa </h3>
+  </div>
+</section>
+
+<div id="modalClient" *ngIf="showAddClient">
+  <form [formGroup]="clientForm">
+    <div class="form">
+      <div class="title">Novo Cliente</div>
+      <div class="input-container ic1">
+        <input id="nmCliente" formControlName="nmCliente" class="input" type="text" placeholder=" " />
+        <div class="cut"></div>
+        <label for="nmCliente" class="placeholderForm">Nome do Cliente</label>
+      </div>
+      <small *ngIf="clientForm.controls['nmCliente'].dirty && clientForm.hasError('required','nmCliente')" class="text-danger">A descrição é obrigatória</small>
+      <div class="input-container ic2">
+        <input formControlName="nmCidade" id="nmCidade" class="input" type="text" placeholder=" " />
+        <div class="cut"></div>
+        <label for="nmCidade" class="placeholderForm">Cidade do Cliente</label>
+      </div>
+      <small *ngIf="clientForm.controls['nmCidade'].dirty && clientForm.hasError('required','nmCidade')" class="text-danger"> O valor do produto é obrigatório</small>
+      <button (click)="showAddClient = false" type="button" class="submit mt-5"> Fechar </button>
+      <button *ngIf="!isEdit" (click)="onSubmit()" type="submit" class="submit my-3"> Salvar </button>
+      <button *ngIf="isEdit" (click)="onSubmit()" type="submit" class="submit my-3"> Editar </button>
+    </div>
+  </form>
+</div>
+
+<div id="modalClient" *ngIf="showDeleteClient">
+  <div class="form delete">
+    <div class="title">Deletar produto</div>
+    <div class="subtitle">Essa ação é irrevesrível você tem certeza?</div>
+
+    <button (click)="onDelete()" type="button" class="submit my-3"> SIM </button>
+    <button (click)="showDeleteClient = false" type="submit" class="submit my-3 bg-danger"> NÃO </button>
+  </div>
+</div>
